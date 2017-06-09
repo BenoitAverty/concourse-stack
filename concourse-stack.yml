@@ -1,5 +1,9 @@
 version: '3'
 
+networks:
+  traefik-network:
+    external: true
+
 services:
   concourse-db:
     image: postgres:9.5
@@ -16,6 +20,9 @@ services:
     depends_on: [concourse-db]
     volumes: ["./keys/web:/concourse-keys"]
     restart: unless-stopped # required so that it retries until conocurse-db comes up
+    networks:
+      - traefik-network
+      - default
     labels:
       - "traefik.port=8080"
       - "traefik.frontend.rule=Host:${CONCOURSE_EXTERNAL_URL}"
