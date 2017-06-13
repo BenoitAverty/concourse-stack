@@ -27,11 +27,14 @@ services:
         constraints:
           - node.role == manager
       labels:
+        - "traefik.network=concourse-network"
         - "traefik.port=8080"
         - "traefik.frontend.rule=Host:${CONCOURSE_EXTERNAL_URL}"
     networks:
       - traefik-network
       - concourse-network
+    ports: 
+      - "8888:8080" # need to be published until it can be run as swarm stack...
     privileged: true
     environment:
       CONCOURSE_BASIC_AUTH_USERNAME: concourse
